@@ -1,5 +1,6 @@
 <?php
-    // header('Content-Type: application/json');
+    header('Content-Type: application/json');
+    
     $server = 'localhost';
     $username = 'root';
     $password = 'root';
@@ -18,6 +19,10 @@
         echo "no result";
         return;
     }
+    $res = [];
     while ($row = $results -> fetch_assoc()) {
-        echo $row['name'] . " " . $row['lastname'] . " " . $row['address'] . "<br>";
+        $res [] = $row['name'] . " " . $row['lastname'] . " " . $row['address'];
     }
+    $conn -> close();
+
+    echo json_encode($res);
