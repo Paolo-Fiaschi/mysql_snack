@@ -1,37 +1,22 @@
-// function getPaganti() {
-//     $.ajax({
-//         url: "getPaganti.php",
-//         method: "get",
-//         success: function (data) {
-//             console.log(data);
-//             var target = $("#target");
-//            for (const name of data) {
-//                console.log(name);
-//                target.append("<li>" + name + "</li>");
-//            } 
-//         },
-//         error: function(err){
-//             console.error(err);
-            
-//         }
-//     });
-// }
 
-// function init() {
-//     getPaganti();
-// }
-// $(document).ready(init);
+function printPagamento(data) {
+    var source = $('#pagamento-template').html();
+    var template = Handlebars.compile(source);
+    var target = $("#target");
+    for (const pagamento of data) {
+        // target.append("<li>" + pagamento + "</li>");
+        var html = template(pagamento);
+        target.append(html);
+        // console.log(pagamento);
+    }
+}
+function getPagamento() {
 
-function getPagantiPrenotazioni() {
     $.ajax({
-        url: "getPaganti.php",
+        url: "getPagamento.php",
         method: "GET",
         success: function (data) {
-            console.log(data);
-            var target = $("#target");
-            for (const paganti of data) {
-                target.append("<li>" + paganti + "</li>");
-            }
+            printPagamento(data);
         },
         error: function (err) {
             console.error(err);
@@ -39,8 +24,30 @@ function getPagantiPrenotazioni() {
         }
     });
 }
-
+$('#target').on("click", ".delete", deletePagamento)
+function deletePagamento() {
+    var cestino = $(this);
+    var pagamentoHtml = cestino.parent();
+    var id = pagamentoHtml.data('id');
+    console.log(id);
+    $.ajax({
+        url: "deletePagamento.php",
+        method: "POST",
+        data:{
+            id: id   
+        },
+        success: function () {
+            console.log("ok");
+            pagamentoHtml.remove();
+            
+        },
+        error: function (err) {
+            console.error(err);
+            
+        }
+    });
+}
 function init() {
-   getPagantiPrenotazioni(); 
+   getPagamento(); 
 }
 $(document).ready(init);
